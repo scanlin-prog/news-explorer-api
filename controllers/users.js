@@ -1,5 +1,6 @@
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+
 const { NODE_ENV, JWT_SECRET } = process.env;
 const User = require('../models/user');
 const NotFoundError = require('../errors/not-found-err');
@@ -38,6 +39,8 @@ module.exports.createUser = (req, res, next) => {
       }
       if (err.name === 'MongoError' && err.code === 11000) {
         throw new ConflictError('Данный email зарегистрирован');
+      } else {
+        return err;
       }
     })
     .catch(next);
