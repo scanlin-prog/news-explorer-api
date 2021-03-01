@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const { regexUrl } = require('../middlewares/validation');
+const isUrl = require('validator/lib/isURL');
 
 const articleSchema = mongoose.Schema({
   keyword: {
@@ -26,9 +26,11 @@ const articleSchema = mongoose.Schema({
     type: String,
     required: true,
     validate: {
-      validator(v) {
-        return regexUrl.test(v);
-      },
+      validator: (v) => isUrl(v, {
+        protocols: ['http', 'https'],
+        require_protocol: true,
+        require_valid_protocol: true,
+      }),
       message: (props) => `${props.value} is not a valid link!`,
     },
   },
@@ -36,9 +38,11 @@ const articleSchema = mongoose.Schema({
     type: String,
     required: true,
     validate: {
-      validator(v) {
-        return regexUrl.test(v);
-      },
+      validator: (v) => isUrl(v, {
+        protocols: ['http', 'https'],
+        require_protocol: true,
+        require_valid_protocol: true,
+      }),
       message: (props) => `${props.value} is not a valid link!`,
     },
   },
@@ -46,7 +50,7 @@ const articleSchema = mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'user',
     required: true,
-    default: false,
+    select: false,
   },
 });
 

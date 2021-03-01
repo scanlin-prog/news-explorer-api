@@ -3,16 +3,12 @@ require('dotenv').config();
 const cors = require('cors');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
-const { celebrate, errors } = require('celebrate');
-const { createUser, loginUser } = require('./controllers/users');
-const auth = require('./middlewares/auth');
-const { requestLogger, errorLogger } = require('./middlewares/logger.js');
-const { registerValidation, loginValidation } = require('./middlewares/validation');
-const userRoutes = require('./routes/users');
-const articleRoutes = require('./routes/articles');
+const { errors } = require('celebrate');
+const indexRoutes = require('./routes/index');
+const { requestLogger, errorLogger } = require('./middlewares/logger');
+const { errorHandler } = require('./middlewares/error-handler');
 
-
-const { PORT = 3000 } = process.env;
+const { PORT = 3001 } = process.env;
 
 const app = express();
 
@@ -30,26 +26,12 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use(requestLogger);
 
-app.post('/signup', celebrate(registerValidation), createUser);
-app.post('/signin', celebrate(loginValidation), loginUser);
-
-app.use(auth);
-
-app.use('/', userRoutes);
-app.use('/', articleRoutes);
+app.use('/', indexRoutes);
 
 app.use(errorLogger);
 
 app.use(errors());
 
-app.use((err, req, res, next) => {
-  const { statusCode = 500, message } = err;
-
-  res.status(statusCode).send({
-    message: statusCode === 500
-      ? 'На сервере произошла ошибка'
-      : message,
-  });
-});
+app.use(errorHandler);
 
 app.listen(PORT);

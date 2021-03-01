@@ -30,12 +30,6 @@ const createArticleValidation = {
   }),
 };
 
-const userIdValidation = {
-  params: Joi.object().keys({
-    _id: Joi.string().hex().length(24),
-  }),
-};
-
 const articleIdValidation = {
   params: Joi.object().keys({
     articleId: Joi.string().hex().length(24),
@@ -47,6 +41,5 @@ module.exports = {
   registerValidation,
   loginValidation,
   createArticleValidation,
-  userIdValidation,
   articleIdValidation,
 };
