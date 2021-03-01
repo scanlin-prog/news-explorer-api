@@ -9,11 +9,11 @@ module.exports.getArticles = (req, res, next) => Article.find({ owner: req.user.
 
 module.exports.createArticle = (req, res, next) => {
   const {
-    keyword, title, text, date, source, link, image, id,
+    keyword, title, text, date, source, link, image,
   } = req.body;
 
   return Article.create({
-    keyword, title, text, date, source, link, image, id, owner: req.user._id,
+    keyword, title, text, date, source, link, image, owner: req.user._id,
   })
     .then((newArticle) => res.status(200).send(newArticle))
     .catch((err) => {
